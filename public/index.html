@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Judge</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Syne:wght@400;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+  <div id="root">
+
+    <div id="left-panel">
+      
+    </div>
+
+    <div id="divider"></div>
+
+    <div id="right-panel">
+
+      <div id="toolbar"
+        class="h-13 border-b border-zinc-800 bg-[#0d0d1a] flex items-center justify-between px-4 shrink-0 select-none">
+        <div class="flex items-center gap-2.5">
+          <select id="lang-select"
+            class="bg-[#0d0d1a] text-zinc-200 border border-zinc-700 px-3 py-1 rounded-lg font-['JetBrains_Mono',monospace] text-xs outline-hidden cursor-pointer focus:border-cyan-500/50 transition-colors">
+            <option value="cpp">C++</option>
+            <option value="java">Java</option>
+            <option value="python">Python</option>
+            <option value="javascript">Javascript</option>
+          </select>
+        </div>
+        <div class="flex items-center gap-2.5">
+          <button
+            class="bg-zinc-800 text-zinc-200 border border-zinc-700 px-4 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-colors hover:bg-zinc-700 hover:border-zinc-600 active:scale-[0.98]"
+            id="btn-run">▷ Run</button>
+          <button
+            class="bg-gradient-to-r from-cyan-400 to-indigo-500 text-white font-bold text-xs px-5 py-1.5 rounded-lg border-none cursor-pointer transition-all hover:opacity-90 active:scale-[0.98] shadow-xs"
+            id="btn-submit">Submit →</button>
+        </div>
+      </div>
+
+      <div id="editor-section">
+        <div id="editor"></div>
+      </div>
+
+      <div id="v-divider"></div>
+
+      <div id="io-section" class="bg-[#06060c]">
+        <div class="io-pane">
+          <div class="text-[11px] font-bold text-zinc-500 uppercase tracking-widest mb-2.5 select-none">Custom Input
+          </div>
+          <textarea
+            class="flex-1 bg-[#0d0d1a] border border-zinc-800 rounded-xl p-3 font-['JetBrains_Mono',monospace] text-xs text-zinc-400 outline-hidden resize-none overflow-y-auto select-text focus:border-zinc-700 transition-colors"
+            id="custom-input" placeholder="2 7 11 15&#10;9"></textarea>
+        </div>
+        <div class="io-pane">
+          <div class="text-[11px] font-bold text-zinc-500 uppercase tracking-widest mb-2.5 select-none">Output</div>
+          <div
+            class="flex-1 bg-[#0d0d1a] border border-zinc-800 rounded-xl p-3 font-['JetBrains_Mono',monospace] text-xs text-green-400 outline-hidden overflow-y-auto whitespace-pre select-text"
+            id="output-box">Waiting for execution…</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs/loader.min.js"></script>
+  <script src="./js/data.js"></script>
+  <script src="./js/index.js"></script>
+  <script src="./js/draggable.js"></script>
+  <script src="./js/connect.js"></script>
+</body>
+
+</html>

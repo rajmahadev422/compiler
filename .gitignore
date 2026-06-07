@@ -1,0 +1,24 @@
+# Dependency folders
+node_modules/
+jspm_packages/
+
+# Local C++ binaries and Windows build files
+temp/*.exe
+temp/temp_program
+temp/temp_program.exe
+*.o
+*.obj
+*.out
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables (secrets, passwords, API keys)
+.env
+.env.local
