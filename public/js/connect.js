@@ -17,11 +17,12 @@ async function runCode(code, input) {
 
     if (result.error) {
       console.log(result.error);
-      return;
+      return result.error;
     }
     
     return result.output;
   } catch (err) {
     console.log(err.message);
+    return err.message;
   }
 }
