@@ -9,12 +9,16 @@ const starterCode = {
   cpp: `#include <bits/stdc++.h>
 using namespace std;
 
-int main() {
-    int a, b;
-    cin>>a>>b;
+#define ll long long
 
-    cout<<(a+b)<<endl;
-    // parse input, call twoSum, print result
+void solve() {
+
+}
+int main() {
+    int t;
+    cin>>t;
+
+    while(t--) solve();
     return 0;
 }`,
   java: `import java.util.*;
@@ -64,32 +68,28 @@ require(["vs/editor/editor.main"], function () {
 document.getElementById("btn-run").addEventListener("click", async () => {
   const input = document.getElementById("custom-input").value;
   const out = document.getElementById("output-box");
+  const code = editor.getValue();
+
+  socket.emit("run-code", { code, input });
+
   out.className =
     "flex-1 bg-[#0d0d1a] border border-zinc-800 rounded-xl p-3 font-['JetBrains_Mono',monospace] text-xs text-purple-400 outline-hidden overflow-y-auto whitespace-pre select-text";
   out.textContent = "⏳ Submitting…";
-
-  const output = await runCode(editor.getValue(), input);
-
-  out.className =
-    "flex-1 bg-[#0d0d1a] border border-zinc-800 rounded-xl p-3 font-['JetBrains_Mono',monospace] text-xs text-green-400 outline-hidden overflow-y-auto whitespace-pre select-text";
-  out.textContent = output;
 });
 
 document.getElementById("btn-submit").addEventListener("click", async () => {
   const input = document.getElementById("custom-input").value;
   const out = document.getElementById("output-box");
+  const code = editor.getValue();
+
+  socket.emit("run-code", { code, input });
+
   out.className =
     "flex-1 bg-[#0d0d1a] border border-zinc-800 rounded-xl p-3 font-['JetBrains_Mono',monospace] text-xs text-purple-400 outline-hidden overflow-y-auto whitespace-pre select-text";
   out.textContent = "⏳ Submitting…";
-  const output = await runCode(editor.getValue(), input);
-
-  out.className =
-    "flex-1 bg-[#0d0d1a] border border-zinc-800 rounded-xl p-3 font-['JetBrains_Mono',monospace] text-xs text-green-400 outline-hidden overflow-y-auto whitespace-pre select-text";
-  out.textContent = output;
 });
 
 function loadQuestion(question) {
-  
   const questionEle = document.getElementById("left-panel");
   questionEle.innerHTML = `
 <div id="left-scroll">
@@ -141,5 +141,6 @@ ${question.constraint.length !== 0 ? question.constraint.map((cons) => cons).joi
 
 document.addEventListener("DOMContentLoaded", () => {
   loadQuestion(problem);
+  // const socket = io();
   // connectSocket();
 });

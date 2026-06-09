@@ -4,6 +4,11 @@ import { fileURLToPath } from "url";
 import fs from "fs";
 import { execFile, exec, spawn } from "child_process";
 import { error } from "console";
+import http from "http";
+import { Server } from "socket.io";
+import { createFolder, deleteFolder } from "./utils/create.js";
+import queue from "./utils/queue.js";
+import { codeRunner } from "./utils/codeRunner.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,69 +31,47 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-app.post("/run-code", async (req, res) => {
-  const { code, input } = req.body;
+const server = http.createServer(app);
 
-  if(!input || !input.trim()) {
-    res.json({error: "Please add input|"});
-    return;
-  }
-  const cppFile = path.join(TEMP_DIR, "main.cpp");
-  const binaryFile = path.join(TEMP_DIR, "main");
-  const inputFile = path.join(TEMP_DIR, "input.txt");
+const io = new Server(server);
+app.use(express.static("public"));
 
-  fs.writeFileSync(cppFile, code);
-  fs.writeFileSync(inputFile, input || "");
+io.on("connection", (socket) => {
+  const id = socket.id;
 
-  try {
-    // 1. compile first (sync style using spawn wrapper)
-    const compile = spawn("g++", [cppFile, "-o", binaryFile]);
+  socket.on("run-code", async ({ code, input }) => {
+    queue.add(async () => {
+      try {
+        socket.emit("status", "In queue");
 
-    let compileError = "";
+        const folderPath = path.join(TEMP_DIR, id);
+        const { isCreated } = await createFolder(folderPath, code, input);
 
-    compile.stderr.on("data", (data) => {
-      compileError += data.toString();
-    });
+        if (isCreated) return socket.emit("status", error);
+        socket.emit("status", "Compiling");
 
-    compile.on("close", (code) => {
-      if (code !== 0) {
-        return res.json({
-          output: "",
-          error: compileError || "Compilation Error",
-        });
+        const { output, error } = await codeRunner(folderPath);
+
+        if (error) socket.emit("status", error);
+        else socket.emit("status", output);
+      } catch (err) {
+        console.log(err);
+        socket.emit("status", err.message);
+      } finally {
+        await deleteFolder(id);
       }
-
-      // 2. run program
-      const run = spawn(binaryFile);
-
-      const inputStream = fs.createReadStream(inputFile);
-
-      let output = "";
-      let error = "";
-
-      run.stdout.on("data", (data) => {
-        output += data.toString();
-      });
-
-      run.stderr.on("data", (data) => {
-        error += data.toString();
-      });
-
-      run.on("close", () => {
-        return res.json({
-          output: output.trim(),
-          error: error || null,
-        });
-      });
-
-      // send input
-      inputStream.pipe(run.stdin);
     });
-  } catch (err) {
-    res.json({error: err.message})
-  }
+  });
+
+  socket.on("return-output", (folderPath) => {
+    console.log("Folder path", folderPath);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected:", socket.id);
+  });
 });
 
-app.listen(PORT, '0.0.0.0', () => {
+server.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });

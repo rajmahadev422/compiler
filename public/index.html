@@ -17,7 +17,7 @@
   <div id="root">
 
     <div id="left-panel">
-      
+
     </div>
 
     <div id="divider"></div>
@@ -71,11 +71,29 @@
 
   </div>
 
+  <script src="/socket.io/socket.io.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs/loader.min.js"></script>
+  <script>
+    const socket = io();
+
+    socket.on('connect', () => {
+      console.log('Connected: ', socket.id);
+    });
+
+    socket.on('output', (data) => {
+      console.log('output: ', data);
+    });
+    const outputBox = document.getElementById('output-box');
+
+    socket.on('status', (output) => {
+      outputBox.textContent = output;
+    })
+  </script>
   <script src="./js/data.js"></script>
   <script src="./js/index.js"></script>
   <script src="./js/draggable.js"></script>
   <script src="./js/connect.js"></script>
+
 </body>
 
 </html>
