@@ -9,6 +9,7 @@ import { Server } from "socket.io";
 import { createFolder, deleteFolder } from "./utils/create.js";
 import queue from "./utils/queue.js";
 import { codeRunner } from "./utils/codeRunner.js";
+import crypto from 'crypto';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -55,7 +56,6 @@ io.on("connection", (socket) => {
 
         const { output, error } = await codeRunner(folderPath);
 
-        console.log("output", output, "error", error);
 
         if (error) socket.emit("status", error);
         else socket.emit("status", output);

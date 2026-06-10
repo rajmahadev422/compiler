@@ -8,15 +8,6 @@ export function codeRunner(folderPath) {
     const inputFile = path.join(folderPath, "input.txt");
     const binaryFile = path.join(folderPath, "main.exe");
 
-    console.log("\n========== JOB START ==========");
-    console.log("Folder:", folderPath);
-    console.log("CPP:", cppFile);
-    console.log("INPUT:", inputFile);
-    console.log("EXE:", binaryFile);
-
-    console.log("CPP Exists:", fs.existsSync(cppFile));
-    console.log("INPUT Exists:", fs.existsSync(inputFile));
-
     let compile;
 
     try {
