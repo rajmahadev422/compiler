@@ -141,6 +141,4 @@ ${question.constraint.length !== 0 ? question.constraint.map((cons) => cons).joi
 
 document.addEventListener("DOMContentLoaded", () => {
   loadQuestion(problem);
-  // const socket = io();
-  // connectSocket();
 });

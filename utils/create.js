@@ -30,7 +30,6 @@ export async function createFolder(folderPath, code, input) {
  */
 export async function deleteFolder(folderPath) {
   try {
-    // const folderPath = path.join(ROOT_DIR, folderName);
 
     await fs.rm(folderPath, {
       recursive: true,

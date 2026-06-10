@@ -25,6 +25,7 @@ if (!fs.existsSync(TEMP_DIR)) {
 
 // Serve static files
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static("public"));
 
 // Route (optional)
 app.get("/", (req, res) => {
@@ -34,17 +35,19 @@ app.get("/", (req, res) => {
 const server = http.createServer(app);
 
 const io = new Server(server);
-app.use(express.static("public"));
 
 io.on("connection", (socket) => {
-  const id = socket.id;
+
+  console.log('User connected: ', socket.id);
+
+  const id = crypto.randomUUID();
+  const folderPath = path.join(TEMP_DIR, id);
 
   socket.on("run-code", async ({ code, input }) => {
     queue.add(async () => {
       try {
         socket.emit("status", "In queue");
 
-        const folderPath = path.join(TEMP_DIR, id);
         const { isCreated } = await createFolder(folderPath, code, input);
 
         if (isCreated) return socket.emit("status", error);
@@ -52,19 +55,17 @@ io.on("connection", (socket) => {
 
         const { output, error } = await codeRunner(folderPath);
 
+        console.log("output", output, "error", error);
+
         if (error) socket.emit("status", error);
         else socket.emit("status", output);
       } catch (err) {
         console.log(err);
         socket.emit("status", err.message);
       } finally {
-        await deleteFolder(id);
+        await deleteFolder(folderPath);
       }
     });
-  });
-
-  socket.on("return-output", (folderPath) => {
-    console.log("Folder path", folderPath);
   });
 
   socket.on("disconnect", () => {
