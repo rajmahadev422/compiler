@@ -72,7 +72,7 @@ export function codeRunner(folderPath) {
       let run;
 
       try {
-        run = spawn("cmd.exe", ["/c", binaryFile]);
+        run = spawn(binaryFile);
       } catch (err) {
         console.log("RUN SPAWN ERROR:", err);
 
