@@ -1,4 +1,4 @@
-import { spawn } from "child_process";
+import { spawn, exec } from "child_process";
 import path from "path";
 import fs from "fs";
 
@@ -8,14 +8,27 @@ export function codeRunner(folderPath) {
     const inputFile = path.join(folderPath, "input.txt");
     const binaryFile = path.join(folderPath, "main.exe");
 
+    let finished = false;
+
+    const safeResolve = (result) => {
+      if (finished) return;
+      finished = true;
+      resolve(result);
+    };
+
+    if (!fs.existsSync(cppFile)) {
+      return safeResolve({
+        output: "",
+        error: "Source file not found",
+      });
+    }
+
     let compile;
 
     try {
       compile = spawn("g++", [cppFile, "-o", binaryFile]);
     } catch (err) {
-      console.log("Compile Spawn Error:", err);
-
-      return resolve({
+      return safeResolve({
         output: "",
         error: err.message,
       });
@@ -23,40 +36,53 @@ export function codeRunner(folderPath) {
 
     let compileError = "";
 
+    const compileTimeout = setTimeout(() => {
+      console.log("COMPILE TIMEOUT");
+
+      try {
+        compile.kill("SIGKILL");
+      } catch {}
+
+      safeResolve({
+        output: "",
+        error: "Compilation Timeout (10s)",
+      });
+    }, 10000);
+
     compile.stdout.on("data", (data) => {
       console.log("COMPILE STDOUT:", data.toString());
     });
 
     compile.stderr.on("data", (data) => {
-      console.log("COMPILE STDERR:", data.toString());
       compileError += data.toString();
+      console.log("COMPILE STDERR:", data.toString());
     });
 
     compile.on("error", (err) => {
-      console.log("COMPILE PROCESS ERROR:", err);
+      clearTimeout(compileTimeout);
 
-      resolve({
+      safeResolve({
         output: "",
         error: err.message,
       });
     });
 
-    compile.on("close", (compileCode) => {
-      console.log("Compile Exit Code:", compileCode);
+    compile.on("close", (code) => {
+      clearTimeout(compileTimeout);
 
-      if (compileCode !== 0) {
-        return resolve({
+      console.log("Compile Exit Code:", code);
+
+      if (code !== 0) {
+        return safeResolve({
           output: "",
           error: compileError || "Compilation Failed",
         });
       }
 
-      console.log("EXE Exists:", fs.existsSync(binaryFile));
-
       if (!fs.existsSync(binaryFile)) {
-        return resolve({
+        return safeResolve({
           output: "",
-          error: "Executable file was not created",
+          error: "Executable file not found",
         });
       }
 
@@ -65,9 +91,7 @@ export function codeRunner(folderPath) {
       try {
         run = spawn(binaryFile);
       } catch (err) {
-        console.log("RUN SPAWN ERROR:", err);
-
-        return resolve({
+        return safeResolve({
           output: "",
           error: err.message,
         });
@@ -76,29 +100,74 @@ export function codeRunner(folderPath) {
       let output = "";
       let error = "";
 
-      run.on("error", (err) => {
-        console.log("RUNTIME ERROR:", err);
+      const MAX_OUTPUT_SIZE = 2 * 1024 * 1024; // 1MB
 
-        resolve({
+      const runtimeTimeout = setTimeout(() => {
+        console.log("TIME LIMIT EXCEEDED");
+
+        try {
+          if (process.platform === "win32") {
+            exec(`taskkill /pid ${run.pid} /T /F`);
+          } else {
+            run.kill("SIGKILL");
+          }
+        } catch {}
+
+        safeResolve({
+          output: "",
+          error: "Time Limit Exceeded (3s)",
+        });
+      }, 3000);
+
+      run.on("error", (err) => {
+        clearTimeout(runtimeTimeout);
+
+        safeResolve({
           output: "",
           error: err.message,
         });
       });
 
       run.stdout.on("data", (data) => {
-        const text = data.toString();
+        output += data.toString();
 
-        console.log("PROGRAM STDOUT:", text);
+        if (output.length > MAX_OUTPUT_SIZE) {
+          clearTimeout(runtimeTimeout);
 
-        output += text;
+          try {
+            if (process.platform === "win32") {
+              exec(`taskkill /pid ${run.pid} /T /F`);
+            } else {
+              run.kill("SIGKILL");
+            }
+          } catch {}
+
+          safeResolve({
+            output: "",
+            error: "Output Limit Exceeded",
+          });
+        }
       });
 
       run.stderr.on("data", (data) => {
-        const text = data.toString();
+        error += data.toString();
 
-        console.log("PROGRAM STDERR:", text);
+        if (error.length > MAX_OUTPUT_SIZE) {
+          clearTimeout(runtimeTimeout);
 
-        error += text;
+          try {
+            if (process.platform === "win32") {
+              exec(`taskkill /pid ${run.pid} /T /F`);
+            } else {
+              run.kill("SIGKILL");
+            }
+          } catch {}
+
+          safeResolve({
+            output: "",
+            error: "Error Output Limit Exceeded",
+          });
+        }
       });
 
       if (fs.existsSync(inputFile)) {
@@ -107,22 +176,20 @@ export function codeRunner(folderPath) {
         inputStream.pipe(run.stdin);
 
         inputStream.on("end", () => {
-          console.log("Input stream finished");
           run.stdin.end();
         });
 
         inputStream.on("error", (err) => {
           console.log("Input Stream Error:", err);
         });
+      } else {
+        run.stdin.end();
       }
 
-      run.on("close", (runCode) => {
-        console.log("Run Exit Code:", runCode);
-        console.log("Final Output:", output);
-        console.log("Final Error:", error);
-        console.log("========== JOB END ==========\n");
+      run.on("close", (code, signal) => {
+        clearTimeout(runtimeTimeout);
 
-        resolve({
+        safeResolve({
           output: output.trim(),
           error: error.trim() || null,
         });

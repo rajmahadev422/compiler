@@ -4,3 +4,5 @@ temp/*.exe
 temp/temp_program
 .git
 .DS_Store
+*.cpp
+.cph
