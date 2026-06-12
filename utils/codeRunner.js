@@ -38,15 +38,6 @@ export function codeRunner(folderPath) {
 
       console.log("COMPILE TIMEOUT");
 
-      // try {
-      //   compile.kill("SIGKILL");
-      // } catch {}
-
-      // safeResolve({
-      //   output: "",
-      //   error: "Compilation Timeout (10s)",
-      // });
-
     compile.stdout.on("data", (data) => {
       console.log("COMPILE STDOUT:", data.toString());
     });
