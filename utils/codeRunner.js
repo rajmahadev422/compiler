@@ -36,18 +36,16 @@ export function codeRunner(folderPath) {
 
     let compileError = "";
 
-    const compileTimeout = setTimeout(() => {
       console.log("COMPILE TIMEOUT");
 
-      try {
-        compile.kill("SIGKILL");
-      } catch {}
+      // try {
+      //   compile.kill("SIGKILL");
+      // } catch {}
 
-      safeResolve({
-        output: "",
-        error: "Compilation Timeout (10s)",
-      });
-    }, 10000);
+      // safeResolve({
+      //   output: "",
+      //   error: "Compilation Timeout (10s)",
+      // });
 
     compile.stdout.on("data", (data) => {
       console.log("COMPILE STDOUT:", data.toString());
@@ -59,7 +57,6 @@ export function codeRunner(folderPath) {
     });
 
     compile.on("error", (err) => {
-      clearTimeout(compileTimeout);
 
       safeResolve({
         output: "",
@@ -68,7 +65,6 @@ export function codeRunner(folderPath) {
     });
 
     compile.on("close", (code) => {
-      clearTimeout(compileTimeout);
 
       console.log("Compile Exit Code:", code);
 
