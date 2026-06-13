@@ -57,8 +57,8 @@ io.on("connection", (socket) => {
         const { output, error } = await codeRunner(folderPath);
 
 
-        if (error) socket.emit("status", error);
-        else socket.emit("status", output);
+        if (error) socket.emit("status", error + "\n\n\n" + "=============Finished===========");
+        else socket.emit("status", output + "\n\n\n" + "=============Finished===========");
       } catch (err) {
         console.log(err);
         socket.emit("status", err.message);
