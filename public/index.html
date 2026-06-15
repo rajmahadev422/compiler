@@ -64,10 +64,12 @@
             id="expected-output" placeholder="2 7 11 15&#10;9"></textarea>
         </div>
         <div class="io-pane">
-          <div class="text-[11px] font-bold text-zinc-500 uppercase tracking-widest mb-2.5 select-none">Output</div>
+          <div class="text-[11px] font-bold text-zinc-500 tracking-widest mb-2.5 select-none">OUTPUT</div>
           <div
-            class="flex-1 bg-[#0d0d1a] border border-zinc-800 rounded-xl p-3 font-['JetBrains_Mono',monospace] text-xs text-green-400 outline-hidden overflow-y-auto whitespace-pre select-text"
-            id="output-box">Waiting for execution…</div>
+            class="flex-1 bg-[#0d0d1a] border border-zinc-800 rounded-xl px-2 font-['JetBrains_Mono',monospace] text-xs text-green-400 outline-hidden overflow-y-auto whitespace-pre select-text">
+            <p id="output-box">Waiting for execution…</p>
+            <span id="finish"></span>
+          </div>
         </div>
       </div>
 
@@ -91,7 +93,12 @@
 
     socket.on('status', (output) => {
       outputBox.textContent = output;
-    })
+    });
+
+    socket.on('finished', (finished) => {
+      document.getElementById('finish').innerText = finished;
+    });
+
   </script>
   <script src="./js/data.js"></script>
   <script src="./js/index.js"></script>

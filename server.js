@@ -45,6 +45,7 @@ io.on("connection", (socket) => {
   const folderPath = path.join(TEMP_DIR, id);
 
   socket.on("run-code", async ({ code, input }) => {
+    socket.emit('status', "Submitting...")
     queue.add(async () => {
       try {
         socket.emit("status", "In queue");
@@ -57,13 +58,14 @@ io.on("connection", (socket) => {
         const { output, error } = await codeRunner(folderPath);
 
 
-        if (error) socket.emit("status", error + "\n\n\n" + "=============Finished===========");
-        else socket.emit("status", output + "\n\n\n" + "=============Finished===========");
+        if (error) socket.emit("status", error);
+        else socket.emit("status", output);
       } catch (err) {
         console.log(err);
         socket.emit("status", err.message);
       } finally {
         await deleteFolder(folderPath);
+        socket.emit('finished', "\n=============Finished===========");
       }
     });
   });

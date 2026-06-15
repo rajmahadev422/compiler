@@ -73,14 +73,9 @@ require(["vs/editor/editor.main"], function () {
 /* ── Execution Mock scripts ── */
 document.getElementById("btn-run").addEventListener("click", async () => {
   const input = document.getElementById("custom-input").value;
-  const out = document.getElementById("output-box");
   const code = editor.getValue();
 
   socket.emit("run-code", { code, input });
-
-  out.className =
-    "flex-1 bg-[#0d0d1a] border border-zinc-800 rounded-xl p-3 font-['JetBrains_Mono',monospace] text-xs text-purple-400 outline-hidden overflow-y-auto whitespace-pre select-text";
-  out.textContent = "⏳ Submitting…";
 });
 
 function loadQuestion(question) {
@@ -90,14 +85,14 @@ function loadQuestion(question) {
 
         <div class="flex items-center gap-2.5">
           ${question.tags
-            .map(
-              (
-                tag,
-              ) => `<span class="text-green-400 capitalize border border-green-600/50 px-3 py-0.5 rounded-full text-xs font-semibold tracking-wider select-none">
+      .map(
+        (
+          tag,
+        ) => `<span class="text-green-400 capitalize border border-green-600/50 px-3 py-0.5 rounded-full text-xs font-semibold tracking-wider select-none">
             ${tag}
             </span>`,
-            )
-            .join("")}
+      )
+      .join("")}
         </div>
 
         <h1 class="text-2xl font-extrabold text-white m-0 mb-3.5 tracking-tight select-text">
@@ -107,11 +102,11 @@ function loadQuestion(question) {
         <p class="text-zinc-400 text-sm leading-relaxed m-0 mb-5 select-text">${question.story}</p>
 
         ${question.examples
-          .map(
-            (
-              exm,
-              i,
-            ) => `<div class="bg-[#0d0d1a] border border-zinc-800/80 rounded-xl p-4 mb-4 select-text">
+      .map(
+        (
+          exm,
+          i,
+        ) => `<div class="bg-[#0d0d1a] border border-zinc-800/80 rounded-xl p-4 mb-4 select-text">
           <div class="text-[11px] font-bold text-zinc-500 uppercase tracking-widest mb-2.5 select-none">Example ${i + 1}</div>
           <pre class="font-['JetBrains_Mono',monospace] text-xs text-zinc-400 m-0 leading-relaxed whitespace-pre-wrap">
 Input:  ${exm.input}
@@ -119,8 +114,8 @@ Output: ${exm.output}
 ${exm.reason ? `Reason: ${exm.reason}` : ""}
           </pre>
         </div>`,
-          )
-          .join("")}
+      )
+      .join("")}
 
         <div class="bg-[#0d0d1a] border border-zinc-800/80 rounded-xl p-4 mb-4 select-text">
           <div class="text-[11px] font-bold text-zinc-500 uppercase tracking-widest mb-2.5 select-none">Constraints
