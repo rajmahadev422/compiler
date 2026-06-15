@@ -41,8 +41,8 @@ require(["vs/editor/editor.main"], function () {
   // console.log(monaco.languages.getLanguages());
 
   editor = monaco.editor.create(document.getElementById("editor"), {
-    value: starterCode.cpp,
-    language: "cpp",
+    value: starterCode['cpp'],
+    language: 'cpp',
     theme: "vs-dark",
     automaticLayout: true,
     fontSize: 14,
@@ -52,7 +52,13 @@ require(["vs/editor/editor.main"], function () {
     lineNumbers: "on",
     renderLineHighlight: "gutter",
     padding: { top: 12 },
+    autoIndent: "full",
     tabSize: 2,
+    formatOnType: true,
+    formatOnPaste: true,
+    guides: {
+      indentation: true
+    }
   });
 
   document
@@ -66,18 +72,6 @@ require(["vs/editor/editor.main"], function () {
 
 /* ── Execution Mock scripts ── */
 document.getElementById("btn-run").addEventListener("click", async () => {
-  const input = document.getElementById("custom-input").value;
-  const out = document.getElementById("output-box");
-  const code = editor.getValue();
-
-  socket.emit("run-code", { code, input });
-
-  out.className =
-    "flex-1 bg-[#0d0d1a] border border-zinc-800 rounded-xl p-3 font-['JetBrains_Mono',monospace] text-xs text-purple-400 outline-hidden overflow-y-auto whitespace-pre select-text";
-  out.textContent = "⏳ Submitting…";
-});
-
-document.getElementById("btn-submit").addEventListener("click", async () => {
   const input = document.getElementById("custom-input").value;
   const out = document.getElementById("output-box");
   const code = editor.getValue();
