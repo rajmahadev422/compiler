@@ -76,8 +76,10 @@ require(["vs/editor/editor.main"], function () {
 document.getElementById("btn-run").addEventListener("click", async () => {
   const input = document.getElementById("custom-input").value;
   const code = editor.getValue();
-
+  
+  document.getElementById('finish').innerText = "";
   socket.emit("run-code", { code, input });
+  
 });
 
 function loadQuestion(question) {
