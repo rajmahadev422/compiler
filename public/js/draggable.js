@@ -6,12 +6,12 @@ const rightPanel = document.getElementById("right-panel");
 
 let hDragging = false;
 
-divider.addEventListener("mousedown", (e) => {
-  hDragging = true;
-  divider.classList.add("dragging");
-  document.body.classList.add("dragging");
-  e.preventDefault();
-});
+// divider.addEventListener("mousedown", (e) => {
+//   hDragging = true;
+//   divider.classList.add("dragging");
+//   document.body.classList.add("dragging");
+//   e.preventDefault();
+// });
 
 document.addEventListener("mousemove", (e) => {
   if (!hDragging) return;
