@@ -20,8 +20,13 @@
 
       <div id="toolbar"
         class="h-13 border-b border-zinc-800 bg-[#0d0d1a] flex items-center justify-between px-4 shrink-0 select-none">
-        <h1 class="text-2xl text-green-400">Compiler</h1>
-        <div class="flex items-center gap-2.5">
+        <h1 class="text-xl font-extrabold tracking-tight text-zinc-100 flex items-center gap-2">
+          <span class="text-green-400 font-mono">&lt;/&gt;</span>
+          <span class="bg-gradient-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent">
+            CPP Compiler
+          </span>
+        </h1>
+        <!-- <div class="flex items-center gap-2.5">
           <select id="lang-select"
             class="bg-[#0d0d1a] text-zinc-200 border border-zinc-700 px-3 py-1 rounded-lg font-['JetBrains_Mono',monospace] text-xs outline-hidden cursor-pointer focus:border-cyan-500/50 transition-colors">
             <option value="cpp">C++</option>
@@ -29,7 +34,7 @@
             <option value="python">Python</option>
             <option value="javascript">Javascript</option>
           </select>
-        </div>
+        </div> -->
         <div class="flex items-center gap-2.5">
           <button id="btn-run"
             class="bg-zinc-800 text-zinc-200 border border-zinc-700 px-4 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-colors hover:bg-zinc-700">
@@ -159,7 +164,7 @@
       }
     }
   </script>
- <script src="js/video.js"></script>
+  <script src="js/video.js"></script>
   <script src="./js/data.js"></script>
   <script src="./js/index.js"></script>
   <script src="./js/draggable.js"></script>
