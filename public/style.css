@@ -20,11 +20,6 @@ body.dragging {
 }
 
 /* ── Structural CSS kept intact so your layout scripts work perfectly ── */
-#root {
-  display: flex;
-  height: 100vh;
-  width: 100vw;
-}
 
 #right-panel {
   overflow: hidden;
@@ -39,11 +34,6 @@ body.dragging {
 #editor-section {
   flex: auto;
   min-height: 0;
-}
-
-#editor {
-  height: 100%;
-  width: 100%;
 }
 
 #v-divider {
