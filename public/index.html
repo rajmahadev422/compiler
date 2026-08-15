@@ -88,7 +88,7 @@
     socket.on('status', (output) => {
       outputBox.textContent = output;
 
-      testRes.innerText = "check...";
+      testRes.innerText = "pending";
       testRes.classList.remove('test-success', 'test-failed');
       testRes.classList.add('test-pending');
     });
