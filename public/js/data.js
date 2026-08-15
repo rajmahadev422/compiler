@@ -6,7 +6,10 @@ using namespace std;
 #define ll long long
 
 void solve() {
+  int n;
+  cin>>n;
 
+  cout<<2*n<<endl;
 }
 int main() {
     ios::sync_with_stdio(false);

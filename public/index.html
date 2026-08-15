@@ -52,7 +52,9 @@
             id="custom-input" placeholder="2 7 11 15&#10;9"></textarea>
         </div>
         <div class="io-pane">
-          <div class="text-[11px] font-bold text-zinc-500 uppercase tracking-widest mb-2.5 select-none">Expected Output
+          <div
+            class="text-[11px] flex justify-between font-bold text-zinc-500 uppercase tracking-widest mb-2.5 select-none">
+            <p>Expected Output </p><span class="test" id="testRes"></span>
           </div>
           <textarea
             class="flex-1 bg-[#0d0d1a] border border-zinc-800 rounded-xl p-3 font-['JetBrains_Mono',monospace] text-xs text-zinc-400 outline-hidden resize-none overflow-y-auto select-text focus:border-zinc-700 transition-colors"
@@ -81,19 +83,40 @@
       console.log('Connected: ', socket.id);
     });
 
-    socket.on('output', (data) => {
-      console.log('output: ', data);
-    });
     const outputBox = document.getElementById('output-box');
-
+    const testRes = document.getElementById('testRes');
     socket.on('status', (output) => {
       outputBox.textContent = output;
+
+      testRes.innerText = "check...";
+      testRes.classList.remove('test-success', 'test-failed');
+      testRes.classList.add('test-pending');
     });
+
+    const expRes = document.getElementById('expected-output');
 
     socket.on('finished', (finished) => {
       document.getElementById('finish').innerText = finished;
-    });
 
+      const expected = normalizeOutput(expRes.value);
+      const actual = normalizeOutput(outputBox.textContent);
+
+      if (expected === actual) {
+        testRes.innerText = "true";
+        testRes.classList.remove('test-pending', 'test-failed');
+        testRes.classList.add('test-success');
+      } else {
+        testRes.innerText = "false";
+        testRes.classList.remove('test-pending', 'test-success');
+        testRes.classList.add('test-failed');
+      }
+    });
+function normalizeOutput(str) {
+  return str
+    .trim()
+    .split(/\s+/)
+    .join(' ');
+}
   </script>
   <script src="./js/data.js"></script>
   <script src="./js/index.js"></script>

@@ -96,3 +96,19 @@ body.dragging {
 .io-pane+.io-pane {
   border-left: 1px solid #1e293b;
 }
+
+.test {
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.test-pending {
+  background-color: yellow;
+}
+.test-success {
+  background-color: green;
+}
+
+.test-failed {
+  background-color: red;
+}
