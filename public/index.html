@@ -31,9 +31,10 @@
           </select>
         </div>
         <div class="flex items-center gap-2.5">
-          <button
-            class="bg-zinc-800 text-zinc-200 border border-zinc-700 px-4 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-colors hover:bg-zinc-700 hover:border-zinc-600 active:scale-[0.98]"
-            id="btn-run">▷ Run</button>
+          <button id="btn-run"
+            class="bg-zinc-800 text-zinc-200 border border-zinc-700 px-4 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-colors hover:bg-zinc-700">
+            ▷ Run
+          </button>
         </div>
       </div>
 
@@ -85,10 +86,13 @@
 
     const outputBox = document.getElementById('output-box');
     const testRes = document.getElementById('testRes');
+    const runBtn = document.getElementById('btn-run');
+
     socket.on('status', (output) => {
       outputBox.textContent = output;
 
       testRes.innerText = "pending";
+      setRunning(true);
       testRes.classList.remove('test-success', 'test-failed');
       testRes.classList.add('test-pending');
     });
@@ -97,7 +101,7 @@
 
     socket.on('finished', (finished) => {
       document.getElementById('finish').innerText = finished;
-
+      setRunning(false);
       const expected = normalizeOutput(expRes.value);
       const actual = normalizeOutput(outputBox.textContent);
 
@@ -111,12 +115,23 @@
         testRes.classList.add('test-failed');
       }
     });
-function normalizeOutput(str) {
-  return str
-    .trim()
-    .split(/\s+/)
-    .join(' ');
-}
+    function normalizeOutput(str) {
+      return str
+        .trim()
+        .split(/\s+/)
+        .join(' ');
+    }
+    function setRunning(running) {
+      runBtn.disabled = running;
+
+      if (running) {
+        runBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        runBtn.classList.remove('cursor-pointer');
+      } else {
+        runBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        runBtn.classList.add('cursor-pointer');
+      }
+    }
   </script>
   <script src="./js/data.js"></script>
   <script src="./js/index.js"></script>

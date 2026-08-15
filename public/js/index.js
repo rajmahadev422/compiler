@@ -61,8 +61,3 @@ document.getElementById("btn-run").addEventListener("click", async () => {
   socket.emit("run-code", { code, input });
   
 });
-
-
-// document.addEventListener("DOMContentLoaded", () => {
-  
-// });
