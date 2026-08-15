@@ -6,19 +6,16 @@ using namespace std;
 #define ll long long
 
 void solve() {
-  int n;
-  cin>>n;
-
-  cout<<2*n<<endl;
+ 
 }
 int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-    int t;
-    cin>>t;
+  ios::sync_with_stdio(false);
+  cin.tie(nullptr);
+  int t;
+  cin>>t;
 
-    while(t--) solve();
-    return 0;
+  while(t--) solve();
+  return 0;
 }`,
   java: `import java.util.*;
 
