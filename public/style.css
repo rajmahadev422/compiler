@@ -112,7 +112,3 @@ body.dragging {
 .test-failed {
   background-color: red;
 }
-
-#advertisement::-webkit-scrollbar {
-  display: none;
-}

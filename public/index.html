@@ -73,9 +73,31 @@
 
     </div>
 
-    <div id="advertisement"
+    <div id="video-chat"
       class="min-h-screen py-4 flex-1 min-w-0 hidden md:block bg-gradient-to-br from-[#0d0d1a] via-[#1a1a2e] to-[#0d0d1a] border-t border-zinc-800 flex flex-col items-center overflow-y-auto justify-center px-4">
+
+      <div class="w-full max-w-3xl flex flex-col items-center gap-4">
+        <h2 class="text-white text-xl font-bold">Live Video</h2>
+
+        <div class="w-full bg-black rounded-2xl overflow-hidden border border-zinc-800 shadow-lg">
+          <video id="user-video" autoplay playsinline muted class="w-full h-[420px] object-cover bg-black"></video>
+        </div>
+
+        <div class="flex flex-wrap gap-3 justify-center">
+          <button id="toggle-camera"
+            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+            Start Camera
+          </button>
+
+          <button id="toggle-recording"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+            Start Recording
+          </button>
+        </div>
+
+        <p id="video-status" class="text-sm text-zinc-300">Camera idle.</p>
       </div>
+    </div>
 
   </div>
 
@@ -137,6 +159,7 @@
       }
     }
   </script>
+ <script src="js/video.js"></script>
   <script src="./js/data.js"></script>
   <script src="./js/index.js"></script>
   <script src="./js/draggable.js"></script>
