@@ -6,7 +6,7 @@ using namespace std;
 #define ll long long
 
 void solve() {
- 
+
 }
 int main() {
   ios::sync_with_stdio(false);
