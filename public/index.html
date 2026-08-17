@@ -128,7 +128,7 @@
     socket.on('status', (output) => {
       outputBox.textContent = output;
 
-      testRes.innerText = "pending";
+      testRes.innerText = "running";
       setRunning(true);
       testRes.classList.remove('test-success', 'test-failed');
       testRes.classList.add('test-pending');
@@ -143,11 +143,11 @@
       const actual = normalizeOutput(outputBox.textContent);
 
       if (expected === actual) {
-        testRes.innerText = "true";
+        testRes.innerText = "Passed";
         testRes.classList.remove('test-pending', 'test-failed');
         testRes.classList.add('test-success');
       } else {
-        testRes.innerText = "false";
+        testRes.innerText = "Failed";
         testRes.classList.remove('test-pending', 'test-success');
         testRes.classList.add('test-failed');
       }
